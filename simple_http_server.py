@@ -1,13 +1,14 @@
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from urllib.parse import urlparse, parse_qs
+
 
 class Server(BaseHTTPRequestHandler):
 
     def do_POST(self):
-        try:
-            path, params = self.path.split('?')
-            paramapmpam = {i.split('=')[0]: i.split('=')[1] for i in params.split('&')}
-        except ValueError:
-            path = self.path
+        parsed_url = urlparse(self.path)
+        path = parsed_url.path
+        query = parse_qs(parsed_url.query)
+
         content_type = self.headers['Content-Type']
 
         content_length = int(self.headers['Content-Length'])
